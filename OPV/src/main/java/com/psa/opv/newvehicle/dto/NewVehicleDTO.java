@@ -17,21 +17,26 @@ import lombok.NoArgsConstructor;
 public class NewVehicleDTO {
 	@JsonProperty
 	private String vehicleId;
-	@NotNull
-	@NotBlank
+	// @NotBlank annotation is used for not null(@NotNull) and not empty ,atleast
+	// one
+	// character
+
+	@NotBlank(message = "vehicleType must not be empty")
 	@JsonProperty
 	private String vehicleType;
-	@NotNull
-	@NotBlank
+
+	@NotBlank(message = "vehicleName must not be empty")
 	@JsonProperty
 	private String vehicleName;
-	@NotNull
-	@NotBlank
+
+	@NotBlank(message = "vehicleColour must not be empty")
 	@JsonProperty
 	private String vehicleColour;
+
 	@NotNull
 	@JsonProperty()
 	private Double vehicleCost;
+
 	@NotNull
 	@JsonProperty
 	private LocalDate vehicleManfDate;

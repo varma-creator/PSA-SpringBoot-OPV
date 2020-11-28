@@ -1,9 +1,16 @@
 package com.psa.opv.newvehicle.exceptioncontroller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.validation.ConstraintViolationException;
+
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -42,4 +49,49 @@ public class NewVehicleCustomExceptionHandler extends ResponseEntityExceptionHan
 		return new ResponseEntity<JsonErrorDetails>(jsonErrorDetails, HttpStatus.NOT_FOUND);
 	}
 
+	/**
+	 * Handling the Internal server error
+	 * 
+	 * @param exception
+	 * @param webRequest
+	 * @return
+	 */
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<JsonErrorDetails> handleInternalServerError(Exception exception, WebRequest webRequest) {
+		JsonErrorDetails jsonErrorDetails = new JsonErrorDetails(LocalDateTime.now(),
+				HttpStatus.INTERNAL_SERVER_ERROR.value(), NewVehicleConstants.INTERNAL_SERVER_ERROR,
+				exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<JsonErrorDetails>(jsonErrorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	/**
+	 * Handling method parameter using @Valid annotation
+	 */
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		List<String> details = new ArrayList<>();
+		for (ObjectError error : ex.getBindingResult().getAllErrors()) {
+			details.add(error.getDefaultMessage());
+		}
+		JsonErrorDetails jsonErrorDetails = new JsonErrorDetails(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
+				NewVehicleConstants.VALIDATION_FIELD, details.toString(), request.getDescription(false));
+		return new ResponseEntity<>(jsonErrorDetails, HttpStatus.BAD_REQUEST);
+	}
+
+	/**
+	 * validating path variable and request @param
+	 * 
+	 * @param exception
+	 * @param webRequest
+	 * @return
+	 */
+	@ExceptionHandler(ConstraintViolationException.class)
+	public ResponseEntity<JsonErrorDetails> constraintViolationException(ConstraintViolationException exception,
+			WebRequest webRequest) {
+		JsonErrorDetails jsonErrorDetails = new JsonErrorDetails(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
+				NewVehicleConstants.VALIDATION_FIELD, exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<JsonErrorDetails>(jsonErrorDetails, HttpStatus.BAD_REQUEST);
+
+	}
 }

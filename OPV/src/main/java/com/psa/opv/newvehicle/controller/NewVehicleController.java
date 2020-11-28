@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +34,7 @@ import com.psa.opv.newvehicle.service.INewVehicleService;
  */
 @RestController
 @RequestMapping(value = "/api")
+@Validated
 public class NewVehicleController {
 
 	@Autowired
@@ -54,7 +58,7 @@ public class NewVehicleController {
 	/**
 	 * @return ResponseEntity
 	 */
-	@GetMapping(value = "/allnewvehicles")
+	@GetMapping(value = "get/allnewvehicles")
 	public ResponseEntity<List<NewVehicleDTO>> getAllNewVehicles() {
 		Optional<List<NewVehicleDTO>> allNewVehicles = iNewVehicleService.getAllNewVehicles();
 		return new ResponseEntity<List<NewVehicleDTO>>(
@@ -70,11 +74,25 @@ public class NewVehicleController {
 	 */
 	@PutMapping(value = "/update/{vehicleid}")
 	public ResponseEntity<NewVehicleDTO> updateNewVehicle(
-			@PathVariable(name = "vehicleid", required = true) String vehicleId,
+			@PathVariable(name = "vehicleid", required = true) @NotBlank(message = "vehicleId must not be empty") String vehicleId,
 			@RequestBody(required = true) NewVehicleDTO newVehicleDto) {
 		Optional<NewVehicleDTO> updateNewVehicleId = iNewVehicleService.updateNewVehicleId(newVehicleDto, vehicleId);
 		return new ResponseEntity<NewVehicleDTO>(
 				updateNewVehicleId.orElseThrow(
+						() -> new NewVehiclesNotFoundException(NewVehicleConstants.NOT_FOUND + ":" + vehicleId)),
+				HttpStatus.OK);
+	}
+
+	/**
+	 * @param vehicleID
+	 * @return NewVehicleDTO
+	 */
+	@GetMapping(value = "/get/{vehicleId}")
+	public ResponseEntity<NewVehicleDTO> getVehicleById(
+			@PathVariable(name = "vehicleId", required = true) @NotBlank(message = "vehicleId must not be empty") String vehicleId) {
+		Optional<NewVehicleDTO> newVehicleID = iNewVehicleService.getNewVehicleID(vehicleId);
+		return new ResponseEntity<NewVehicleDTO>(
+				newVehicleID.orElseThrow(
 						() -> new NewVehiclesNotFoundException(NewVehicleConstants.NOT_FOUND + ":" + vehicleId)),
 				HttpStatus.OK);
 	}

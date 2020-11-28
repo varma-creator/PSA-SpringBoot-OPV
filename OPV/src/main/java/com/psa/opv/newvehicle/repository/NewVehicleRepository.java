@@ -6,6 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.psa.opv.newvehicle.entity.NewVehicle;
 
+/**
+ * @author varma
+ *
+ */
 public interface NewVehicleRepository extends JpaRepository<NewVehicle, Integer> {
 
 	public Optional<NewVehicle> findByVehicleTypeAndVehicleName(String vehicleType, String vehicelName);
