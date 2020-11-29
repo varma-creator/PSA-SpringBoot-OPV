@@ -112,4 +112,46 @@ public class NewVehicleService implements INewVehicleService {
 		}
 		return newVehicleID;
 	}
+
+	/**
+	 *
+	 */
+	@Override
+	public Optional<NewVehicleDTO> deleteByVehicleID(String vehicleId) {
+		Optional<NewVehicleDTO> emptyNewVehicleDTO = Optional.empty();
+		List<NewVehicle> deleteByVehicleId = newVehicleRepository.removeByVehicleId(vehicleId);
+		if (!deleteByVehicleId.isEmpty() && deleteByVehicleId != null) {
+			NewVehicleDTO convertNewVehToNewVehDto = utilityObjectConversion
+					.convertNewVehToNewVehDto(deleteByVehicleId.get(0));
+			emptyNewVehicleDTO = Optional.of(convertNewVehToNewVehDto);
+		}
+		return emptyNewVehicleDTO;
+	}
+
+	@Override
+	public Optional<List<NewVehicleDTO>> removeByVehicleType(String vehicleId) {
+		List<NewVehicle> removeByVehicleType = newVehicleRepository.removeByVehicleType(vehicleId);
+		Optional<List<NewVehicleDTO>> newVehicleDtoList = Optional.empty();
+		if (!removeByVehicleType.isEmpty() && removeByVehicleType != null) {
+			List<NewVehicleDTO> collect = removeByVehicleType.stream()
+					.map(newVeh -> utilityObjectConversion.convertNewVehToNewVehDto(newVeh))
+					.collect(Collectors.toList());
+			newVehicleDtoList = Optional.of(collect);
+		}
+		return newVehicleDtoList;
+	}
+
+	@Override
+	public Optional<List<NewVehicleDTO>> getByVehicleTypeAndVehicleColour(String vehicleType, String vehicleColour) {
+		Optional<List<NewVehicle>> byVehicleTypeAndVehicleColour = newVehicleRepository
+				.getByVehicleTypeAndVehicleColour(vehicleType, vehicleColour);
+		Optional<List<NewVehicleDTO>> newVehicleDtoList = Optional.empty();
+		if (!byVehicleTypeAndVehicleColour.get().isEmpty() && byVehicleTypeAndVehicleColour.get() != null) {
+			List<NewVehicleDTO> collect = byVehicleTypeAndVehicleColour.get().stream()
+					.map(newVeh -> utilityObjectConversion.convertNewVehToNewVehDto(newVeh))
+					.collect(Collectors.toList());
+			newVehicleDtoList = Optional.of(collect);
+		}
+		return newVehicleDtoList;
+	}
 }

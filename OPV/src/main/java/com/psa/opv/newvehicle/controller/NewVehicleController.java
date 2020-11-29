@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.psa.opv.newvehicle.constants.NewVehicleConstants;
 import com.psa.opv.newvehicle.dto.NewVehicleDTO;
+import com.psa.opv.newvehicle.entity.NewVehicle;
 import com.psa.opv.newvehicle.exception.NewVehicleAlreardyFoundException;
 import com.psa.opv.newvehicle.exception.NewVehiclesNotFoundException;
 import com.psa.opv.newvehicle.service.INewVehicleService;
@@ -72,9 +75,9 @@ public class NewVehicleController {
 	 * @param newVehicleDto
 	 * @return
 	 */
-	@PutMapping(value = "/update/{vehicleid}")
+	@PutMapping(value = "/update/{vehicleId}")
 	public ResponseEntity<NewVehicleDTO> updateNewVehicle(
-			@PathVariable(name = "vehicleid", required = true) @NotBlank(message = "vehicleId must not be empty") String vehicleId,
+			@PathVariable(name = "vehicleId", required = true) @NotBlank(message = "vehicleId must not be empty") String vehicleId,
 			@RequestBody(required = true) NewVehicleDTO newVehicleDto) {
 		Optional<NewVehicleDTO> updateNewVehicleId = iNewVehicleService.updateNewVehicleId(newVehicleDto, vehicleId);
 		return new ResponseEntity<NewVehicleDTO>(
@@ -97,4 +100,48 @@ public class NewVehicleController {
 				HttpStatus.OK);
 	}
 
+	/**
+	 * @param vehicleId
+	 * @return NewVehicleDTO
+	 */
+	@DeleteMapping(value = "/delete/{vehicleId}")
+	public ResponseEntity<NewVehicleDTO> deleteVehicleID(
+			@PathVariable(name = "vehicleId", required = true) @NotBlank(message = "vehicleId must not be empty") String vehicleId) {
+		Optional<NewVehicleDTO> deleteByVehicleID = iNewVehicleService.deleteByVehicleID(vehicleId);
+		return new ResponseEntity<NewVehicleDTO>(
+				deleteByVehicleID.orElseThrow(
+						() -> new NewVehiclesNotFoundException(NewVehicleConstants.NOT_FOUND + ":" + vehicleId)),
+				HttpStatus.OK);
+	}
+	
+	/**
+	 * @param vehiclType
+	 * @return List<NewVehicleDTO>
+	 */
+	@DeleteMapping(value = "/alldelete/{vehiclType}")
+	public ResponseEntity<List<NewVehicleDTO>> deleteVehicleType(
+			@PathVariable(name = "vehiclType", required = true) @NotBlank(message = "vehicletype must not be empty") @Size(min = 2 ,message="At least one value needs to be specified") String vehiclType) {
+		Optional<List<NewVehicleDTO>> deletedListVehicleType = iNewVehicleService.removeByVehicleType(vehiclType);
+		return new ResponseEntity<List<NewVehicleDTO>>(
+				deletedListVehicleType.orElseThrow(
+						() -> new NewVehiclesNotFoundException(NewVehicleConstants.NOT_FOUND + ":" + vehiclType)),
+				HttpStatus.OK);
+	}
+
+	/**
+	 * @param vehicleType
+	 * @param vehicleColour
+	 * @return
+	 */
+	@GetMapping(value = "/get/filter")
+	public ResponseEntity<List<NewVehicleDTO>> getVehicleTypeAndColour(@RequestParam(name = "type", required = true)
+	@NotBlank(message = "vehicletype must not be empty") @Size(min = 2) String vehicleType,
+			@RequestParam(name = "colour") @NotBlank(message = "vehicleColour must not be empty") @Size(min = 3) String vehicleColour) {
+		Optional<List<NewVehicleDTO>> byVehicleTypeAndVehicleColour = iNewVehicleService
+				.getByVehicleTypeAndVehicleColour(vehicleType, vehicleColour);
+		return new ResponseEntity<List<NewVehicleDTO>>(byVehicleTypeAndVehicleColour
+				.orElseThrow(() -> new NewVehiclesNotFoundException(NewVehicleConstants.NOT_FOUND + ":" + vehicleType
+						+ NewVehicleConstants.CONCAT_OPERATOR + vehicleColour)),
+				HttpStatus.OK);
+	}
 }
