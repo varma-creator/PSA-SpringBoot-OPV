@@ -56,14 +56,16 @@ public class NewVehicleCustomExceptionHandler extends ResponseEntityExceptionHan
 	 * @param webRequest
 	 * @return
 	 */
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<JsonErrorDetails> handleInternalServerError(Exception exception, WebRequest webRequest) {
-		JsonErrorDetails jsonErrorDetails = new JsonErrorDetails(LocalDateTime.now(),
-				HttpStatus.INTERNAL_SERVER_ERROR.value(), NewVehicleConstants.INTERNAL_SERVER_ERROR,
-				exception.getMessage(), webRequest.getDescription(false));
-		return new ResponseEntity<JsonErrorDetails>(jsonErrorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-
+	/*
+	 * @ExceptionHandler(Exception.class) public ResponseEntity<JsonErrorDetails>
+	 * handleInternalServerError(Exception exception, WebRequest webRequest) {
+	 * JsonErrorDetails jsonErrorDetails = new JsonErrorDetails(LocalDateTime.now(),
+	 * HttpStatus.INTERNAL_SERVER_ERROR.value(),
+	 * NewVehicleConstants.INTERNAL_SERVER_ERROR, exception.getMessage(),
+	 * webRequest.getDescription(false)); return new
+	 * ResponseEntity<JsonErrorDetails>(jsonErrorDetails,
+	 * HttpStatus.INTERNAL_SERVER_ERROR); }
+	 */
 	/**
 	 * Handling method parameter using @Valid annotation
 	 */

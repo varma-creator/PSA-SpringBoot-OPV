@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.psa.opv.newvehicle.dto.NewVehicleDTO;
 import com.psa.opv.newvehicle.entity.NewVehicle;
@@ -19,6 +22,7 @@ import com.psa.opv.newvehicle.utility.UtilityObjectConversion;
  */
 
 @Service
+@Transactional(readOnly = true)
 public class NewVehicleService implements INewVehicleService {
 
 	@Autowired
@@ -31,6 +35,7 @@ public class NewVehicleService implements INewVehicleService {
 	 *
 	 */
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.SERIALIZABLE)
 	public Optional<NewVehicleDTO> addNewVehicle(NewVehicleDTO newVehicleDto) {
 
 		NewVehicleDTO newVehicleDTOAdP = INewVehicleService.AddNewVehicleUniqueProperty(newVehicleDto);
@@ -97,6 +102,7 @@ public class NewVehicleService implements INewVehicleService {
 	 *
 	 */
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.SERIALIZABLE)
 	public Optional<NewVehicleDTO> updateNewVehicleId(NewVehicleDTO newVehicleDTO, String vehicleId) {
 		Optional<NewVehicleDTO> newVehicleID = getNewVehicleID(vehicleId);
 		if (newVehicleID.isPresent()) {
@@ -117,6 +123,7 @@ public class NewVehicleService implements INewVehicleService {
 	 *
 	 */
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.SERIALIZABLE)
 	public Optional<NewVehicleDTO> deleteByVehicleID(String vehicleId) {
 		Optional<NewVehicleDTO> emptyNewVehicleDTO = Optional.empty();
 		List<NewVehicle> deleteByVehicleId = newVehicleRepository.removeByVehicleId(vehicleId);
@@ -129,6 +136,7 @@ public class NewVehicleService implements INewVehicleService {
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.SERIALIZABLE)
 	public Optional<List<NewVehicleDTO>> removeByVehicleType(String vehicleId) {
 		List<NewVehicle> removeByVehicleType = newVehicleRepository.removeByVehicleType(vehicleId);
 		Optional<List<NewVehicleDTO>> newVehicleDtoList = Optional.empty();

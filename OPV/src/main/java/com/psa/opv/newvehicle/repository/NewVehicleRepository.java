@@ -3,6 +3,8 @@ package com.psa.opv.newvehicle.repository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import com.psa.opv.newvehicle.entity.NewVehicle;
 
@@ -31,7 +33,7 @@ public interface NewVehicleRepository extends JpaRepository<NewVehicle, Integer>
 	 * @param vehicleId
 	 * @return
 	 */
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.SERIALIZABLE)
 	public List<NewVehicle> removeByVehicleId(String vehicleId);
 
 	/**
@@ -40,7 +42,7 @@ public interface NewVehicleRepository extends JpaRepository<NewVehicle, Integer>
 	 * @param vehicleId
 	 * @return
 	 */
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.SERIALIZABLE)
 	public List<NewVehicle> removeByVehicleType(String vehicleId);
 
 	/**
