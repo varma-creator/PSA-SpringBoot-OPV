@@ -1,0 +1,22 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNameSpaceSchemaLocation="ehcache.xsd" updateCheck="true"
+	monitoring="autodetect" dynamicConfig="true">
+	<diskStore path="user-dir" />
+	
+	<!-- heap size in ram   maxEntriesLocalHeap -->
+	
+	<!-- heap size in local disk maxEntriesLocalDisk -->
+	<cache name="newVehicelCache"
+	
+	    maxEntriesLocalHeap="1000"
+		maxEntriesLocalDisk="2000" 
+		eternal="false" 
+		diskSpoolBufferSizeMB="20"
+		timeToIdleSeconds="300"
+		timeToLiveSeconds="600"
+		memoryStoreEvictionPolicy="LFU" 
+		transactionalMode="off">
+		<persistence strategy="localTempSwap" />
+	</cache>
+
+</ehcache>

@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.psa.opv.newvehicle.constants.NewVehicleConstants;
 import com.psa.opv.newvehicle.dto.NewVehicleDTO;
-import com.psa.opv.newvehicle.entity.NewVehicle;
 import com.psa.opv.newvehicle.exception.NewVehicleAlreardyFoundException;
 import com.psa.opv.newvehicle.exception.NewVehiclesNotFoundException;
 import com.psa.opv.newvehicle.service.INewVehicleService;

@@ -1,5 +1,6 @@
 package com.psa.opv.newvehicle.dto;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.validation.constraints.NotBlank;
@@ -14,7 +15,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class NewVehicleDTO {
+public class NewVehicleDTO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@JsonProperty
 	private String vehicleId;
 	// @NotBlank annotation is used for not null(@NotNull) and not empty ,atleast

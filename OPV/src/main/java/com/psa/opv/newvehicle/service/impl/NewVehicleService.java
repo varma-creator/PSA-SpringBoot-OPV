@@ -5,6 +5,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -23,6 +27,7 @@ import com.psa.opv.newvehicle.utility.UtilityObjectConversion;
 
 @Service
 @Transactional(readOnly = true)
+@CacheConfig(cacheNames = "newVehicelCache")
 public class NewVehicleService implements INewVehicleService {
 
 	@Autowired
@@ -86,6 +91,7 @@ public class NewVehicleService implements INewVehicleService {
 	 *
 	 */
 	@Override
+	@Cacheable(key="#vehicleId")
 	public Optional<NewVehicleDTO> getNewVehicleID(String vehicleId) {
 		Optional<NewVehicleDTO> newVehicleDTO = Optional.empty();
 		Optional<NewVehicle> vehicleIdOrVehicleUniqueNum = newVehicleRepository.findByVehicleId(vehicleId);
@@ -102,6 +108,7 @@ public class NewVehicleService implements INewVehicleService {
 	 *
 	 */
 	@Override
+	@CachePut(key = "#vehicleId")
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.SERIALIZABLE)
 	public Optional<NewVehicleDTO> updateNewVehicleId(NewVehicleDTO newVehicleDTO, String vehicleId) {
 		Optional<NewVehicleDTO> newVehicleID = getNewVehicleID(vehicleId);
@@ -123,6 +130,7 @@ public class NewVehicleService implements INewVehicleService {
 	 *
 	 */
 	@Override
+	@CacheEvict(key="#vehicleId")
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.SERIALIZABLE)
 	public Optional<NewVehicleDTO> deleteByVehicleID(String vehicleId) {
 		Optional<NewVehicleDTO> emptyNewVehicleDTO = Optional.empty();
