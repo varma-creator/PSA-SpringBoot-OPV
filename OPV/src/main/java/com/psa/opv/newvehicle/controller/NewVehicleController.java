@@ -1,5 +1,6 @@
 package com.psa.opv.newvehicle.controller;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,9 @@ import com.psa.opv.newvehicle.exception.NewVehicleAlreardyFoundException;
 import com.psa.opv.newvehicle.exception.NewVehiclesNotFoundException;
 import com.psa.opv.newvehicle.service.INewVehicleService;
 
+import lombok.extern.slf4j.Slf4j;
+
+
 /**
  * The class represents NewVehicle Controller and handles the NewVehicle HTTP
  * request
@@ -37,6 +41,7 @@ import com.psa.opv.newvehicle.service.INewVehicleService;
 @RestController
 @RequestMapping(value = "/api")
 @Validated
+@Slf4j
 public class NewVehicleController {
 
 	@Autowired
@@ -49,6 +54,7 @@ public class NewVehicleController {
 	@PostMapping(value = "/add")
 	public ResponseEntity<NewVehicleDTO> addNewVehicle(
 			@Valid @RequestBody(required = true) NewVehicleDTO newVehicleDto) {
+		log.info("addNewVehicle()->{}","Vehicle Data:"+ newVehicleDto);
 		Optional<NewVehicleDTO> newVehDto = iNewVehicleService.addNewVehicle(newVehicleDto);
 		return new ResponseEntity<NewVehicleDTO>(
 				newVehDto.orElseThrow(
@@ -62,6 +68,7 @@ public class NewVehicleController {
 	 */
 	@GetMapping(value = "get/allnewvehicles")
 	public ResponseEntity<List<NewVehicleDTO>> getAllNewVehicles() {
+		log.info("getAllNewVehicles()->{}");
 		Optional<List<NewVehicleDTO>> allNewVehicles = iNewVehicleService.getAllNewVehicles();
 		return new ResponseEntity<List<NewVehicleDTO>>(
 				allNewVehicles.orElseThrow(
@@ -78,6 +85,7 @@ public class NewVehicleController {
 	public ResponseEntity<NewVehicleDTO> updateNewVehicle(
 			@PathVariable(name = "vehicleId", required = true) @NotBlank(message = "vehicleId must not be empty") String vehicleId,
 			@RequestBody(required = true) NewVehicleDTO newVehicleDto) {
+		log.info("updateNewVehicles()->{}","VehicleId:"+vehicleId);
 		Optional<NewVehicleDTO> updateNewVehicleId = iNewVehicleService.updateNewVehicleId(newVehicleDto, vehicleId);
 		return new ResponseEntity<NewVehicleDTO>(
 				updateNewVehicleId.orElseThrow(
@@ -92,6 +100,7 @@ public class NewVehicleController {
 	@GetMapping(value = "/get/{vehicleId}")
 	public ResponseEntity<NewVehicleDTO> getVehicleById(
 			@PathVariable(name = "vehicleId", required = true) @NotBlank(message = "vehicleId must not be empty") String vehicleId) {
+		log.info("getVehicleId()->{}", "vehicleId:"+vehicleId);
 		Optional<NewVehicleDTO> newVehicleID = iNewVehicleService.getNewVehicleID(vehicleId);
 		return new ResponseEntity<NewVehicleDTO>(
 				newVehicleID.orElseThrow(
@@ -104,8 +113,9 @@ public class NewVehicleController {
 	 * @return NewVehicleDTO
 	 */
 	@DeleteMapping(value = "/delete/{vehicleId}")
-	public ResponseEntity<NewVehicleDTO> deleteVehicleID(
+	public ResponseEntity<NewVehicleDTO> deleteVehicleId(
 			@PathVariable(name = "vehicleId", required = true) @NotBlank(message = "vehicleId must not be empty") String vehicleId) {
+		log.info("deleteVehicleId()->{}", "vehicleId:"+vehicleId);
 		Optional<NewVehicleDTO> deleteByVehicleID = iNewVehicleService.deleteByVehicleID(vehicleId);
 		return new ResponseEntity<NewVehicleDTO>(
 				deleteByVehicleID.orElseThrow(
@@ -120,6 +130,7 @@ public class NewVehicleController {
 	@DeleteMapping(value = "/alldelete/{vehiclType}")
 	public ResponseEntity<List<NewVehicleDTO>> deleteVehicleType(
 			@PathVariable(name = "vehiclType", required = true) @NotBlank(message = "vehicletype must not be empty") @Size(min = 2 ,message="At least one value needs to be specified") String vehiclType) {
+		log.info("getVehicletype()->{}", "vehicleType:"+vehiclType);
 		Optional<List<NewVehicleDTO>> deletedListVehicleType = iNewVehicleService.removeByVehicleType(vehiclType);
 		return new ResponseEntity<List<NewVehicleDTO>>(
 				deletedListVehicleType.orElseThrow(
@@ -136,6 +147,7 @@ public class NewVehicleController {
 	public ResponseEntity<List<NewVehicleDTO>> getVehicleTypeAndColour(@RequestParam(name = "type", required = true)
 	@NotBlank(message = "vehicletype must not be empty") @Size(min = 2) String vehicleType,
 			@RequestParam(name = "colour") @NotBlank(message = "vehicleColour must not be empty") @Size(min = 3) String vehicleColour) {
+log.info("getVehicleTypeAndColour()->{}", "vehicletype="+vehicleType,"vehicleColour="+vehicleColour);
 		Optional<List<NewVehicleDTO>> byVehicleTypeAndVehicleColour = iNewVehicleService
 				.getByVehicleTypeAndVehicleColour(vehicleType, vehicleColour);
 		return new ResponseEntity<List<NewVehicleDTO>>(byVehicleTypeAndVehicleColour

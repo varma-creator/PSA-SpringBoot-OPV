@@ -20,6 +20,8 @@ import com.psa.opv.newvehicle.repository.NewVehicleRepository;
 import com.psa.opv.newvehicle.service.INewVehicleService;
 import com.psa.opv.newvehicle.utility.UtilityObjectConversion;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author Varma
  *
@@ -28,6 +30,7 @@ import com.psa.opv.newvehicle.utility.UtilityObjectConversion;
 @Service
 @Transactional(readOnly = true)
 @CacheConfig(cacheNames = "newVehicelCache")
+@Slf4j
 public class NewVehicleService implements INewVehicleService {
 
 	@Autowired
@@ -42,7 +45,7 @@ public class NewVehicleService implements INewVehicleService {
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.SERIALIZABLE)
 	public Optional<NewVehicleDTO> addNewVehicle(NewVehicleDTO newVehicleDto) {
-
+        log.info("addNewVehicle()->{}",newVehicleDto);
 		NewVehicleDTO newVehicleDTOAdP = INewVehicleService.AddNewVehicleUniqueProperty(newVehicleDto);
 		Optional<NewVehicleDTO> vehicleDto = Optional.empty();
 		Optional<NewVehicleDTO> checkVehicleTypeName = getByVehicleTypeAndName(newVehicleDTOAdP.getVehicleType(),
@@ -93,12 +96,14 @@ public class NewVehicleService implements INewVehicleService {
 	@Override
 	@Cacheable(key="#vehicleId")
 	public Optional<NewVehicleDTO> getNewVehicleID(String vehicleId) {
+		log.info("getNewVehicleID()->{}",vehicleId);
 		Optional<NewVehicleDTO> newVehicleDTO = Optional.empty();
 		Optional<NewVehicle> vehicleIdOrVehicleUniqueNum = newVehicleRepository.findByVehicleId(vehicleId);
 		if (vehicleIdOrVehicleUniqueNum.isPresent()) {
 			NewVehicleDTO newVehicleDTODb = utilityObjectConversion
 					.convertNewVehToNewVehDto(vehicleIdOrVehicleUniqueNum.get());
 			newVehicleDTO = Optional.of(newVehicleDTODb);
+			log.debug("successfully fetching vehicle from db:"+vehicleId);
 		}
 
 		return newVehicleDTO;
