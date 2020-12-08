@@ -1,11 +1,14 @@
 package com.psa.opv.newvehicle.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.psa.opv.newvehicle.entity.NewVehicle;
 
 /**
@@ -50,4 +53,17 @@ public interface NewVehicleRepository extends JpaRepository<NewVehicle, Integer>
 	 * @return
 	 */
 	public Optional<List<NewVehicle>> getByVehicleTypeAndVehicleColour(String vehicleType, String vehicleColour);
+	
+	/**
+	 * @param vehicleStartfDate
+	 * @param vehicleEndDate
+	 * @return  List<NewVehicle>
+	 */
+	public  Optional<List<NewVehicle>> findByVehicleManfDateBetween(LocalDate vehicleStartfDate,LocalDate vehicleEndDate);
+	
+	/**
+	 * @param vehicleType
+	 * @return List<NewVehicleType>
+	 */
+	public List<NewVehicleType> findByVehicleType(String vehicleType);
 }

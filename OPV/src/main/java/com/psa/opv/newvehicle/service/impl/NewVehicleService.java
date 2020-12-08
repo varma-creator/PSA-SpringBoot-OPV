@@ -1,5 +1,6 @@
 package com.psa.opv.newvehicle.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,8 +16,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.psa.opv.newvehicle.dto.NewVehicleDTO;
+import com.psa.opv.newvehicle.dto.NewVehicleTypeDTO;
 import com.psa.opv.newvehicle.entity.NewVehicle;
 import com.psa.opv.newvehicle.repository.NewVehicleRepository;
+import com.psa.opv.newvehicle.repository.NewVehicleType;
 import com.psa.opv.newvehicle.service.INewVehicleService;
 import com.psa.opv.newvehicle.utility.UtilityObjectConversion;
 
@@ -43,9 +46,9 @@ public class NewVehicleService implements INewVehicleService {
 	 *
 	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.SERIALIZABLE)
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
 	public Optional<NewVehicleDTO> addNewVehicle(NewVehicleDTO newVehicleDto) {
-        log.info("addNewVehicle()->{}",newVehicleDto);
+		log.info("addNewVehicle()->{}", newVehicleDto);
 		NewVehicleDTO newVehicleDTOAdP = INewVehicleService.AddNewVehicleUniqueProperty(newVehicleDto);
 		Optional<NewVehicleDTO> vehicleDto = Optional.empty();
 		Optional<NewVehicleDTO> checkVehicleTypeName = getByVehicleTypeAndName(newVehicleDTOAdP.getVehicleType(),
@@ -94,16 +97,16 @@ public class NewVehicleService implements INewVehicleService {
 	 *
 	 */
 	@Override
-	@Cacheable(key="#vehicleId")
+	@Cacheable(key = "#vehicleId")
 	public Optional<NewVehicleDTO> getNewVehicleID(String vehicleId) {
-		log.info("getNewVehicleID()->{}",vehicleId);
+		log.info("getNewVehicleID()->{}", vehicleId);
 		Optional<NewVehicleDTO> newVehicleDTO = Optional.empty();
 		Optional<NewVehicle> vehicleIdOrVehicleUniqueNum = newVehicleRepository.findByVehicleId(vehicleId);
 		if (vehicleIdOrVehicleUniqueNum.isPresent()) {
 			NewVehicleDTO newVehicleDTODb = utilityObjectConversion
 					.convertNewVehToNewVehDto(vehicleIdOrVehicleUniqueNum.get());
 			newVehicleDTO = Optional.of(newVehicleDTODb);
-			log.debug("successfully fetching vehicle from db:"+vehicleId);
+			log.debug("successfully fetching vehicle from db:" + vehicleId);
 		}
 
 		return newVehicleDTO;
@@ -114,7 +117,7 @@ public class NewVehicleService implements INewVehicleService {
 	 */
 	@Override
 	@CachePut(key = "#vehicleId")
-	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.SERIALIZABLE)
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
 	public Optional<NewVehicleDTO> updateNewVehicleId(NewVehicleDTO newVehicleDTO, String vehicleId) {
 		Optional<NewVehicleDTO> newVehicleID = getNewVehicleID(vehicleId);
 		if (newVehicleID.isPresent()) {
@@ -135,8 +138,8 @@ public class NewVehicleService implements INewVehicleService {
 	 *
 	 */
 	@Override
-	@CacheEvict(key="#vehicleId")
-	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.SERIALIZABLE)
+	@CacheEvict(key = "#vehicleId")
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
 	public Optional<NewVehicleDTO> deleteByVehicleID(String vehicleId) {
 		Optional<NewVehicleDTO> emptyNewVehicleDTO = Optional.empty();
 		List<NewVehicle> deleteByVehicleId = newVehicleRepository.removeByVehicleId(vehicleId);
@@ -149,7 +152,7 @@ public class NewVehicleService implements INewVehicleService {
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.SERIALIZABLE)
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
 	public Optional<List<NewVehicleDTO>> removeByVehicleType(String vehicleId) {
 		List<NewVehicle> removeByVehicleType = newVehicleRepository.removeByVehicleType(vehicleId);
 		Optional<List<NewVehicleDTO>> newVehicleDtoList = Optional.empty();
@@ -174,5 +177,37 @@ public class NewVehicleService implements INewVehicleService {
 			newVehicleDtoList = Optional.of(collect);
 		}
 		return newVehicleDtoList;
+	}
+
+	@Override
+	public Optional<List<NewVehicleDTO>> findByVehicleManfDateBetween(LocalDate vehicleStartfDate,
+			LocalDate vehicleEndDate) {
+		Optional<List<NewVehicle>> findByVehicleManfDateBetween = newVehicleRepository
+				.findByVehicleManfDateBetween(vehicleStartfDate, vehicleEndDate);
+		Optional<List<NewVehicleDTO>> newVehDto = Optional.empty();
+		if (findByVehicleManfDateBetween.isPresent()) {
+			List<NewVehicleDTO> collect = findByVehicleManfDateBetween.get().stream()
+					.map(vehData -> utilityObjectConversion.convertNewVehToNewVehDto(vehData))
+					.collect(Collectors.toList());
+			newVehDto = Optional.of(collect);
+
+		}
+
+		return newVehDto;
+	}
+
+	/**
+	 *
+	 */
+	@Override
+	public List<NewVehicleTypeDTO> findByVehicleType(String vehicleType) {
+		List<NewVehicleType> findByVehicleType = newVehicleRepository.findByVehicleType(vehicleType);
+		List<NewVehicleTypeDTO> collect = findByVehicleType.stream().map(newVehicleType -> {
+			NewVehicleTypeDTO vehicleDTO = new NewVehicleTypeDTO();
+			vehicleDTO.setVehicleType(newVehicleType.getVehicleType());
+			return vehicleDTO;
+		}).collect(Collectors.toList());
+		return collect;
+
 	}
 }

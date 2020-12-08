@@ -1,10 +1,11 @@
 package com.psa.opv.newvehicle.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
 import com.psa.opv.newvehicle.constants.NewVehicleConstants;
 import com.psa.opv.newvehicle.dto.NewVehicleDTO;
+import com.psa.opv.newvehicle.dto.NewVehicleTypeDTO;
 
 /**
  * @author Varma
@@ -48,19 +49,34 @@ public interface INewVehicleService {
 	 * @return Optional<NewVehicleDTO>
 	 */
 	public Optional<NewVehicleDTO> deleteByVehicleID(String vehicleId);
-	
+
 	/**
 	 * @param vehicleId
 	 * @return Optional<List<NewVehicleDTO>>
 	 */
 	public Optional<List<NewVehicleDTO>> removeByVehicleType(String vehicleId);
-	
+
 	/**
 	 * @param vehicleType
 	 * @param vehicleColour
 	 * @return Optional<List<NewVehicleDTO>>
 	 */
-	public Optional<List<NewVehicleDTO>> getByVehicleTypeAndVehicleColour(String vehicleType,String vehicleColour);
+	public Optional<List<NewVehicleDTO>> getByVehicleTypeAndVehicleColour(String vehicleType, String vehicleColour);
+
+	/**
+	 * @param vehicleStartfDate
+	 * @param vehicleEndDate
+	 * @return List<NewVehicle>
+	 */
+	public Optional<List<NewVehicleDTO>> findByVehicleManfDateBetween(LocalDate vehicleStartfDate,
+			LocalDate vehicleEndDate);
+
+	/**
+	 * @param vehicleType
+	 * @return List<NewVehicleTypeDTO>
+	 */
+	public List<NewVehicleTypeDTO> findByVehicleType(String vehicleType);
+
 	/**
 	 * @param newVehicleDTO
 	 * @return NewVehicleDTO
