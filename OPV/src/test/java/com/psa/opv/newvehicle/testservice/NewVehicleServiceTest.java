@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import com.psa.opv.newvehicle.service.INewVehicleService;
 import com.psa.opv.newvehicle.utility.UtilityObjectConversion;
 
 @SpringBootTest
+@Disabled
 public class NewVehicleServiceTest {
 
 	@MockBean
