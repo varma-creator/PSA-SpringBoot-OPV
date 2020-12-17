@@ -1,6 +1,7 @@
 package com.psa.opv.newvehicle.utility;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +9,7 @@ import com.psa.opv.newvehicle.dto.NewVehicleDTO;
 import com.psa.opv.newvehicle.entity.NewVehicle;
 
 @Component
+@Scope(scopeName = "singleton")
 public class UtilityObjectConversion {
 
 	@Autowired
