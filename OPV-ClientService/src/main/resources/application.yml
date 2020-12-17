@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: opv-clientservice  
+  
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8083/eureka   
+      instance:
+      hostname: localhost     
+server:
+  port: 8081
