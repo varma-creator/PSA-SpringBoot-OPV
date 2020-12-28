@@ -7,7 +7,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 /**
  * This Class represents the Springboot App
- * @author Varma
+ * @author Varma yadav
  *
  */
 @SpringBootApplication
