@@ -50,7 +50,7 @@ public class NewVehicleController {
 	/**
 	 * @param newVehicleDto
 	 * @return ResponseEntity<NewVehicleDTO>
-	 * consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE defaulty is there
+	 * consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE defaulty
 	 */
 	@PostMapping(value = "/add")
 	public ResponseEntity<NewVehicleDTO> addNewVehicle(
