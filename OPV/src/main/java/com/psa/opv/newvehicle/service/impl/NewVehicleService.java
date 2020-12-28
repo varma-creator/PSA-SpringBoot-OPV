@@ -83,6 +83,7 @@ public class NewVehicleService implements INewVehicleService {
 	public Optional<List<NewVehicleDTO>> getAllNewVehicles() {
 		List<NewVehicle> newVehicleList = newVehicleRepository.findAll();
 		// convert list of newVehicles to NewVehicleDTO
+		// another way Optiona<List>==is present()==get()==list==perform null check and is empty operation
 		Optional<List<NewVehicleDTO>> newVehicleDtoList = Optional.empty();
 		if (!newVehicleList.isEmpty() && newVehicleList != null) {
 			List<NewVehicleDTO> convnewVehicleDtoList = newVehicleList.stream()
@@ -142,6 +143,7 @@ public class NewVehicleService implements INewVehicleService {
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
 	public Optional<NewVehicleDTO> deleteByVehicleID(String vehicleId) {
 		Optional<NewVehicleDTO> emptyNewVehicleDTO = Optional.empty();
+		//get the id based on findbyvehicleid. if vehicle is exixt delete and retun value or return null;
 		List<NewVehicle> deleteByVehicleId = newVehicleRepository.removeByVehicleId(vehicleId);
 		if (!deleteByVehicleId.isEmpty() && deleteByVehicleId != null) {
 			NewVehicleDTO convertNewVehToNewVehDto = utilityObjectConversion
