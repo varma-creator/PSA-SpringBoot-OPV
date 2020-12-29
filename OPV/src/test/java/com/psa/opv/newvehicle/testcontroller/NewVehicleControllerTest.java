@@ -35,7 +35,7 @@ import com.psa.opv.newvehicle.service.INewVehicleService;
  * @author USER
  *
  */
-//@ExtendWith--not required
+//@ExtendWith--not required defaulty present
 @Disabled
 @WebMvcTest(NewVehicleController.class)
 public class NewVehicleControllerTest {
