@@ -10,6 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.hamcrest.Matchers;
@@ -27,6 +29,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.psa.opv.newvehicle.controller.NewVehicleController;
 import com.psa.opv.newvehicle.dto.NewVehicleDTO;
+import com.psa.opv.newvehicle.error.JsonErrorDetails;
 import com.psa.opv.newvehicle.service.INewVehicleService;
 
 /**
@@ -36,8 +39,8 @@ import com.psa.opv.newvehicle.service.INewVehicleService;
  *
  */
 //@ExtendWith--not required defaulty present in @webMvcTest
-@Disabled
-@WebMvcTest(NewVehicleController.class)
+//@Disabled
+@WebMvcTest(NewVehicleController.class) 
 public class NewVehicleControllerTest {
 
 	@Autowired
@@ -110,6 +113,35 @@ public class NewVehicleControllerTest {
 		when(iNewVehicleService.deleteByVehicleID(ArgumentMatchers.anyString())).thenReturn(Optional.of(newVehicleDTO));
 		mockMvc.perform(delete("/api/delete/{vehicleId}", "New_Veh_001").accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.vehicleId", Matchers.equalTo("New_Veh_001")));
+	}
+	
+	@Test
+	public void testAllNewVehicles() throws Exception {
+		NewVehicleDTO newVehicleDTO=new NewVehicleDTO();
+		newVehicleDTO.setVehicleColour("black");
+		newVehicleDTO.setVehicleType("DS");
+		NewVehicleDTO newVehicleDTO1=new NewVehicleDTO();
+		newVehicleDTO1.setVehicleColour("White");
+		newVehicleDTO1.setVehicleType("AC");
+		List<NewVehicleDTO> list=new ArrayList<NewVehicleDTO>();
+		list.add(newVehicleDTO);
+		list.add(newVehicleDTO1);
+		when(iNewVehicleService.getAllNewVehicles()).thenReturn( Optional.ofNullable(list));	
+		mockMvc.perform(get("/api/get/allnewvehicles").accept(MediaType.APPLICATION_JSON)).andExpect(jsonPath("$", Matchers.hasSize(2)));
+			}
+	
+	//negative test cases
+	@Test
+	public void testGetByVehicleIdFail() throws Exception
+	{
+		/*
+		 * JsonErrorDetails jsonErrorDetails=new JsonErrorDetails();
+		 * jsonErrorDetails.setHttpStatusCode(404);
+		 * jsonErrorDetails.setError("NOT_FOUND");
+		 */
+		when(iNewVehicleService.getNewVehicleID(ArgumentMatchers.anyString())).thenReturn(Optional.empty());
+		
+		mockMvc.perform(get("/api/get/{vehicleId}", "New_Veh_001").accept(MediaType.APPLICATION_JSON)).andExpect(jsonPath("$.error",Matchers.equalTo("NOT_FOUND")));
 	}
 
 }

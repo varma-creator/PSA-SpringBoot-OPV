@@ -9,7 +9,6 @@ import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,10 +31,11 @@ import com.psa.opv.newvehicle.service.INewVehicleService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * The class represents NewVehicle Controller and handles the NewVehicle HTTP
- * request
+ * The class represents  handles the NewVehicle HTTP
+ * requests
  * 
  * @author Varma
+ *
  *
  */
 @RestController
@@ -172,6 +172,10 @@ public class NewVehicleController {
 
 	}
 
+	/**
+	 * @param newVehicletype
+	 * @return
+	 */
 	@GetMapping(value = "/get/typevehicles")
 	public ResponseEntity<List<NewVehicleTypeDTO>> getNewVehicleType(
 			@RequestParam(name = "Nvtype") String newVehicletype) {
