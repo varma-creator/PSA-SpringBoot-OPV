@@ -20,7 +20,11 @@ public class OpvApplication {
 		SpringApplication.run(OpvApplication.class, args);
 		//git local conflicts
 		//git conflicts
+<<<<<<< HEAD
 		//local changes
+=======
+		//added some changes
+>>>>>>> branch 'main' of https://github.com/varma-creator/PSA-SpringBoot-OPV.git
 	}
 
 }
