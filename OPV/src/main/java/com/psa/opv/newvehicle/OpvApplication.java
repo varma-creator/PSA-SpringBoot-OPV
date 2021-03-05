@@ -16,7 +16,6 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 public class OpvApplication {
 
 	public static void main(String[] args) {
-		//local conflict
 		//conflict
 		SpringApplication.run(OpvApplication.class, args);
 	}
