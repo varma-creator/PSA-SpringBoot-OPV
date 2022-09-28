@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class CustomerRestServiceConsumesNewVehicleApplicationTests {
 
+	//added scripts by mamatha
 	@Test
 	void contextLoads() {
 	}
